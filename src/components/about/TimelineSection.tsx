@@ -1,49 +1,24 @@
-import { timeline, type TimelineEntry } from "../../data/aboutContent";
-import { aosClasses, useAosReveal } from "../../hooks/useAosReveal";
-import { useInView } from "../../hooks/useInView";
-import { cn } from "../../lib/cn";
-import { Aos } from "../ui/Aos";
-
-const DELAYS = [100, 200, 300, 400] as const;
+import { timeline } from "../../data/aboutContent";
+import { Reveal } from "../ui/Reveal";
 
 export function TimelineSection() {
   return (
-    <div className="site-container my-12">
-      <Aos as="h2" animation="fade-up" className="mb-6 text-center">
-        Our Journey
-      </Aos>
-      <div id="timeline" className="relative flex flex-row py-5">
+    <section className="wrap py-16 sm:py-24">
+      <Reveal>
+        <h2 className="text-4xl font-bold sm:text-5xl">How we got here</h2>
+      </Reveal>
+      <ol className="mt-10 grid gap-8 border-l-2 border-canopy/20 pl-6 md:grid-cols-4 md:gap-6 md:border-t-2 md:border-l-0 md:pt-8 md:pl-0">
         {timeline.map((entry, index) => (
-          <TimelineItem key={entry.year} entry={entry} delay={DELAYS[index]} />
+          <Reveal as="li" key={entry.year} from="left" step={index + 1} className="relative">
+            <span
+              aria-hidden="true"
+              className="absolute top-1.5 -left-[31px] size-3 rounded-full bg-canopy ring-4 ring-paper md:-top-[39px] md:left-0"
+            />
+            <p className="text-3xl font-extrabold tracking-tight text-canopy tabular-nums">{entry.year}</p>
+            <p className="mt-2 max-w-[28ch] text-ink/80">{entry.text}</p>
+          </Reveal>
         ))}
-      </div>
-    </div>
-  );
-}
-
-/**
- * Original quirk kept: about.js also gave each item a `visible` class the
- * first time it entered the viewport, which cancelled AOS's 100px offset.
- * Since that happens just before AOS triggers, items fade in without
- * sliding, and only their opacity animates afterwards.
- */
-function TimelineItem({ entry, delay }: { entry: TimelineEntry; delay: (typeof DELAYS)[number] }) {
-  const [aosRef, animated] = useAosReveal();
-  const [seenRef, seen] = useInView<HTMLDivElement>({ once: true });
-
-  return (
-    <div
-      ref={(node) => {
-        aosRef(node);
-        seenRef.current = node;
-      }}
-      className={cn(
-        "mb-5 rounded-[8px] bg-white p-5 shadow-[0_2px_4px_rgba(0,0,0,0.1)]",
-        aosClasses("fade-up", animated, delay, !seen),
-      )}
-    >
-      <h5>{entry.year}</h5>
-      <p>{entry.text}</p>
-    </div>
+      </ol>
+    </section>
   );
 }
