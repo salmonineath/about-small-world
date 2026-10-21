@@ -4,8 +4,8 @@
 Small World Company is a collaborative project by Visal, Neath, and Rachana. Our mission is to create innovative solutions that connect people and ideas from around the globe.
 
 The site ("Wildwood") was originally written in plain HTML, CSS, JavaScript and Bootstrap.
-It has been migrated to **React + TypeScript + Tailwind CSS** (built with Vite) while keeping
-the original design and behaviour. The original files are kept in [`legacy/`](legacy/) for reference.
+It has been migrated to **React + TypeScript + Tailwind CSS** (built with Vite) and redesigned
+around a "field guide" idea: the species we plant are the centrepiece of the home page.
 
 ## Features
 - Global connectivity
@@ -62,29 +62,28 @@ Vercel: a rewrite of `/(.*)` to `/index.html`).
 ```text
 src/
 ├── main.tsx                # React entry point (router setup)
-├── App.tsx                 # Routes, legacy URL redirects, scroll reset between pages
-├── index.css               # Tailwind setup, theme tokens, Bootstrap-equivalent base styles
+├── App.tsx                 # Routes, legacy URL redirects, scroll handling (top of page / #section)
+├── index.css               # Tailwind setup, colour + font tokens, base styles
 ├── pages/                  # HomePage, AboutPage
 ├── components/
-│   ├── home/               # Home page sections (header, hero, cards, donation form, FAQ…)
-│   ├── about/              # About page sections (stats, progress, team, timeline…)
-│   ├── layout/SiteFooter   # Footer shared by both pages
-│   └── ui/                 # Collapse, Modal, Aos (scroll-reveal) building blocks
-├── hooks/                  # useInView, useCycle, useAosReveal, usePresence, useModalBehavior
-├── data/                   # Page content (cards, FAQ, stats, team, supporters…)
-└── lib/                    # Small helpers and shared Bootstrap-style class strings
-public/images/              # Local images (the "Friend Forest" logo)
-legacy/                     # The original HTML/CSS/JS site, unchanged
+│   ├── home/               # Home sections (hero, field guide, donation form, FAQ…)
+│   ├── about/              # About sections (impact, progress, timeline, supporters, team)
+│   ├── layout/             # SiteHeader and SiteFooter, shared by both pages
+│   └── ui/                 # Collapse (menu / FAQ), FieldError
+├── hooks/                  # useInView
+├── data/                   # Page content (species, FAQ, stats, team, supporters…)
+└── lib/                    # Class-name helper, shared button/input styles, form validation
 ```
 
-## Styling notes
-- Tailwind is loaded **without its Preflight reset**. The original design relied on
-  Bootstrap's "Reboot" defaults (heading sizes, margins, link colours…). Those defaults are
-  recreated in the `base` layer of `src/index.css`.
-- Tailwind breakpoints are set to Bootstrap's (576 / 768 / 992 / 1200 / 1400px), so the
-  responsive layout switches at the same widths as before.
-- Many classes use exact arbitrary values (e.g. `text-[1.25rem]`, `rounded-[0.375rem]`)
-  on purpose: they are the original Bootstrap values.
+## Design notes
+- Colours and fonts are defined once as Tailwind theme tokens in `src/index.css`
+  (`canopy`, `lichen`, `paper`, `ink`, `moss`, `fern`, `pollen`). Pollen yellow is
+  reserved for the Donate action.
+- Type: Schibsted Grotesk for everything; Newsreader italic only for Latin species names.
+- Forms validate inline (no `alert()`), and the donation and newsletter forms are demos:
+  nothing is charged or stored.
+- Motion is limited to the hero entrance, the field-guide photo change, the FAQ and the
+  progress bars, and is switched off for people who prefer reduced motion.
 
 ## Technology we use
 ```bash

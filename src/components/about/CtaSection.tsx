@@ -1,19 +1,24 @@
-import { Aos } from "../ui/Aos";
+import { Link } from "react-router";
+import { buttonPrimary } from "../../lib/styles";
+import { Reveal } from "../ui/Reveal";
 
 export function CtaSection() {
   return (
-    <div className="bg-kubota-forest py-[60px] text-white">
-      <div className="site-container text-center">
-        <Aos as="h2" animation="fade-up" className="mb-6">
-          Join Our Mission
-        </Aos>
-        <Aos as="p" animation="fade-up" className="mb-6 text-[1.25rem] font-light">
-          Our mission is to inspire and empower communities to take meaningful action for the
-          conservation and restoration of forests. By raising awareness about the critical role
-          forests play in sustaining life on Earth, we aim to create a global movement that
-          prioritizes reforestation and environmental preservation.
-        </Aos>
+    <section className="bg-canopy text-white">
+      <div className="wrap flex flex-col gap-8 py-16 sm:py-20 md:flex-row md:items-end md:justify-between">
+        <Reveal>
+          <h2 className="text-4xl font-bold sm:text-5xl">Join our mission</h2>
+          <p className="mt-4 max-w-[56ch] text-lg text-white/80">
+            We help communities protect and restore their forests. Every donation puts more
+            native trees in the ground.
+          </p>
+        </Reveal>
+        <Reveal step={1}>
+          <Link to="/#donate" className={buttonPrimary}>
+            Donate
+          </Link>
+        </Reveal>
       </div>
-    </div>
+    </section>
   );
 }

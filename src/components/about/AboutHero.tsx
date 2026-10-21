@@ -1,32 +1,18 @@
-import { Link } from "react-router";
-import { aosClasses, useAosReveal } from "../../hooks/useAosReveal";
-import { cn } from "../../lib/cn";
-import { Aos } from "../ui/Aos";
+import { aboutHeroImage } from "../../data/aboutContent";
 
 export function AboutHero() {
-  const [homeLinkRef, homeLinkAnimated] = useAosReveal();
-
   return (
-    <div className="bg-about-hero flex h-[400px] items-center justify-center text-white">
-      <div className="site-container text-center">
-        <Aos as="h1" animation="fade-down" className="display-4 mb-6">
-          About Wildwood
-        </Aos>
-        <Aos as="p" animation="fade-up" className="text-[1.25rem] font-light">
-          Committed to Reforesting Our Planet
-        </Aos>
-        <Link
-          ref={homeLinkRef}
-          to="/"
-          className={cn(
-            // Bootstrap `.btn.btn-lg.fw-medium` with the original inline colours.
-            "inline-block cursor-pointer rounded-lg border border-transparent bg-forest px-4 py-2 text-center align-middle text-[1.25rem] leading-[1.5] font-medium text-white no-underline select-none hover:text-white",
-            aosClasses("fade-up", homeLinkAnimated),
-          )}
-        >
-          Home
-        </Link>
+    <section className="relative isolate overflow-hidden bg-canopy-deep text-white">
+      <img src={aboutHeroImage} alt="" fetchPriority="high" className="absolute inset-0 -z-10 size-full object-cover" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-t from-canopy-deep via-canopy-deep/70 to-canopy-deep/30" />
+      <div className="wrap pt-32 pb-14 sm:pt-44 sm:pb-20">
+        <h1 className="max-w-[14ch] animate-rise text-[clamp(2.75rem,7vw,5.5rem)] leading-[0.95] font-extrabold tracking-[-0.04em]">
+          We grow forests back.
+        </h1>
+        <p className="mt-6 max-w-[52ch] animate-rise text-lg text-white/85 [animation-delay:120ms] sm:text-xl">
+          Since 2020, Wildwood has planted native trees with local partners in 25 countries.
+        </p>
       </div>
-    </div>
+    </section>
   );
 }
