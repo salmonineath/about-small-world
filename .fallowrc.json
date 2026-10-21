@@ -1,0 +1,4 @@
+{
+  "$schema": "https://fallow.tools/schema.json",
+  "ignorePatterns": ["legacy/**"]
+}
