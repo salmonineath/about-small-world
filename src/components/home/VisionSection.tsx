@@ -1,36 +1,24 @@
-import { useInView } from "../../hooks/useInView";
-import { cn } from "../../lib/cn";
-import { fadeInSlide } from "../../lib/reveal";
+import { Reveal } from "../ui/Reveal";
 
 export function VisionSection() {
-  const [sectionRef, sectionInView] = useInView<HTMLElement>({ threshold: 0.2 });
-  const [contentRef, contentInView] = useInView<HTMLDivElement>({ threshold: 0.1 });
-
   return (
-    <section
-      id="vision"
-      ref={sectionRef}
-      className={cn(
-        "bg-kubota-forest relative flex min-h-[50vh] flex-col items-center justify-center p-8 text-white transition-opacity duration-150 ease-in-out",
-        sectionInView ? "opacity-100" : "opacity-0",
-      )}
-    >
-      <div className="mx-auto flex max-w-[800px] items-center">
-        <div
-          ref={contentRef}
-          className={cn(
-            "text-center [transition:opacity_0.25s_ease,transform_0.25s_ease]",
-            fadeInSlide(contentInView),
-          )}
-        >
-          <h1 className="text-white">Our Vision</h1>
-          <p className="text-white">
-            We envision a world where lush, thriving forests flourish across continents, nurturing
-            biodiversity, combating climate change, and enhancing the well-being of all living
-            beings. Through collaboration, education, and innovation, we strive to be a driving
-            force behind the global effort to restore the balance between humanity and nature.
+    <section className="bg-canopy text-white">
+      <div className="wrap py-20 sm:py-28">
+        <Reveal>
+          <h2 className="text-lg font-semibold text-fern">Our vision</h2>
+        </Reveal>
+        <Reveal step={1}>
+          <p className="mt-4 max-w-[36ch] text-3xl leading-tight font-semibold tracking-tight sm:text-5xl">
+          A world where thriving forests grow on every continent again.
           </p>
-        </div>
+        </Reveal>
+        <Reveal step={2}>
+          <p className="mt-8 max-w-[62ch] text-lg text-white/80">
+          Healthy forests nurture biodiversity, slow climate change and support the well-being of
+          every living thing. Through collaboration, education and new ideas, we work to restore
+          the balance between people and nature.
+          </p>
+        </Reveal>
       </div>
     </section>
   );

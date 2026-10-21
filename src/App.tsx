@@ -4,21 +4,24 @@ import { AboutPage } from "./pages/AboutPage";
 import { HomePage } from "./pages/HomePage";
 
 /**
- * Each original page was a separate HTML document, so moving between pages
- * always started at the top. In-page `#section` links are left to the browser.
+ * Client-side navigation does not scroll on its own: start each page at the
+ * top, and scroll to `#section` targets (including links from another page).
  */
-function ScrollToTopOnPageChange() {
-  const { pathname } = useLocation();
+function ScrollManager() {
+  // `key` changes on every navigation, so clicking the same #link again re-scrolls.
+  const { pathname, hash, key } = useLocation();
   useLayoutEffect(() => {
-    if (!window.location.hash) window.scrollTo({ top: 0, behavior: "instant" });
-  }, [pathname]);
+    const target = hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null;
+    if (target) target.scrollIntoView();
+    else window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname, hash, key]);
   return null;
 }
 
 export function App() {
   return (
     <>
-      <ScrollToTopOnPageChange />
+      <ScrollManager />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />

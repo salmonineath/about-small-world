@@ -1,105 +1,115 @@
-import { cn } from "../../lib/cn";
-import { button, buttonOutlineWarning, formControl } from "../../lib/styles";
+import { useState, type FormEvent } from "react";
+import { Link } from "react-router";
+import { EMAIL_PATTERN, errorProps } from "../../lib/validation";
+import { FieldError } from "../ui/FieldError";
 
-type FooterColumn = { title: string; links: string[] };
-
-const columns: FooterColumn[] = [
-  { title: "Quicklink", links: ["Home", "Features", "Pricing", "FAQs", "About"] },
-  { title: "About us", links: ["Home", "Features", "Pricing", "FAQs", "About"] },
-  { title: "Contact us", links: ["Phone", "Email", "Whatsapp", "Yahoo", "+855 092824223"] },
+const exploreLinks = [
+  { to: "/#why", label: "Why forests matter" },
+  { to: "/#plant", label: "What we plant" },
+  { to: "/#donate", label: "Donate" },
+  { to: "/#faq", label: "FAQ" },
+  { to: "/about", label: "About us" },
+  { to: "/about#supporters", label: "Supporters" },
 ];
 
-const socialIcons = ["fa-facebook", "fa-google", "fa-github", "fa-instagram", "fa-youtube"];
+const YEAR = new Date().getFullYear();
 
-type SiteFooterProps = {
-  /**
-   * The two original pages had slightly different footers: the home page's
-   * links were bold with an animated underline, and the copyright differed.
-   */
-  variant: "home" | "about";
-  /** Home page only: id of the link marked active by the last click. */
-  activeLinkId?: string;
-  onLinkClick?: (linkId: string) => void;
-};
-
-export function SiteFooter({ variant, activeLinkId, onLinkClick }: SiteFooterProps) {
-  const isHome = variant === "home";
-
+export function SiteFooter() {
   return (
-    <div className={cn("bg-forest", !isHome && "mx-auto w-full px-3")}>
-      <footer
-        className={cn("py-12", isHome && "mx-auto w-full max-w-[1200px] px-8")}
-      >
-        <div className="-mx-3 flex flex-wrap text-light">
-          {columns.map((column) => (
-            <div
-              key={column.title}
-              className="mb-4 w-1/2 max-w-full shrink-0 px-3 md:w-1/6 md:flex-none"
-            >
-              <h5 className="heading-h4 font-bold">{column.title}</h5>
-              <ul className="mb-0 flex list-none flex-col! flex-wrap pl-0">
-                {column.links.map((label, index) => {
-                  const linkId = `footer:${column.title}:${index}`;
-                  return (
-                    <li key={linkId} className="mb-2">
-                      <a
-                        href="#"
-                        data-active={activeLinkId === linkId}
-                        data-underline-focus={isHome ? "" : undefined}
-                        onClick={() => onLinkClick?.(linkId)}
-                        className={cn(
-                          "p-0 no-underline transition-[color,background-color,border-color] duration-150 ease-in-out motion-reduce:transition-none",
-                          isHome
-                            ? "underline-grow inline-block font-bold text-white hover:text-[#0a58ca] focus:text-[#0a58ca]"
-                            : "block text-white hover:text-white",
-                        )}
-                      >
-                        {label}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
-
-          <div className="mb-4 w-full max-w-full shrink-0 px-3 md:ml-[8.33333333%] md:w-5/12 md:flex-none">
-            <form>
-              <h1 className="font-bold text-bs-warning">Subscribe to our Community</h1>
-              <p className="text-white">Monthly digest of what's new and exciting from us.</p>
-              <div className="flex w-full flex-col gap-2 sm:flex-row">
-                <label htmlFor={`newsletter-${variant}`} className="sr-only">
-                  Email address
-                </label>
-                <input
-                  id={`newsletter-${variant}`}
-                  type="text"
-                  className={formControl}
-                  placeholder="Email address"
-                />
-                <button type="button" className={cn(button, buttonOutlineWarning)}>
-                  Subscribe
-                </button>
-              </div>
-            </form>
-          </div>
+    <footer className="bg-canopy-deep text-white/80">
+      <div className="wrap grid gap-10 py-14 md:grid-cols-[1.2fr_1fr_1fr_1.6fr]">
+        <div>
+          <p className="text-xl font-extrabold tracking-tight text-white">Wildwood</p>
+          <p className="mt-2 max-w-[28ch] text-sm">
+            A reforestation project by Small World Company.
+          </p>
         </div>
 
-        <div className="my-6 flex flex-col justify-between border-t border-border py-6 text-light sm:flex-row">
-          <p className="text-white">
-            {isHome
-              ? "© 2024 Small World Company, All rights reserved."
-              : "© 2024 Company, Inc. All rights reserved."}
-          </p>
-          <ul className="heading-h2 flex cursor-pointer list-none gap-4 pl-0">
-            {socialIcons.map((icon) => (
-              <li key={icon}>
-                <i className={cn("fa-brands block!", icon)} aria-hidden="true" />
+        <div>
+          <h2 className="text-sm font-semibold text-white">Explore</h2>
+          <ul className="mt-3 space-y-2 text-sm">
+            {exploreLinks.map((link) => (
+              <li key={link.to}>
+                <Link to={link.to} className="hover:text-white hover:underline">
+                  {link.label}
+                </Link>
               </li>
             ))}
           </ul>
         </div>
-      </footer>
+
+        <div>
+          <h2 className="text-sm font-semibold text-white">Contact</h2>
+          <ul className="mt-3 space-y-2 text-sm">
+            <li>
+              <a href="tel:+85592824223" className="hover:text-white hover:underline">
+                +855 92 824 223
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <NewsletterForm />
+      </div>
+
+      <div className="wrap text-sm">
+        <p className="border-t border-white/10 py-6">© {YEAR} Small World Company. All rights reserved.</p>
+      </div>
+    </footer>
+  );
+}
+
+function NewsletterForm() {
+  const [subscribed, setSubscribed] = useState(false);
+
+  return (
+    <div>
+      <h2 className="text-sm font-semibold text-white">Monthly field notes</h2>
+      <p className="mt-3 text-sm">One email a month on what we planted and where.</p>
+      {subscribed ? (
+        <p role="status" className="mt-4 text-sm font-medium text-fern">
+          You're on the list. (This demo site doesn't send email yet.)
+        </p>
+      ) : (
+        <NewsletterFields onSubscribed={() => setSubscribed(true)} />
+      )}
     </div>
+  );
+}
+
+function NewsletterFields({ onSubscribed }: { onSubscribed: () => void }) {
+  const [error, setError] = useState<string>();
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const email = String(new FormData(event.currentTarget).get("email") ?? "").trim();
+    if (EMAIL_PATTERN.test(email)) onSubscribed();
+    else setError("Enter an email address like name@example.com.");
+  }
+
+  return (
+    <form noValidate onSubmit={handleSubmit} className="mt-4">
+      <div className="flex gap-2">
+        <label htmlFor="newsletter-email" className="sr-only">
+          Email address
+        </label>
+        <input
+          id="newsletter-email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          placeholder="you@example.com"
+          {...errorProps("newsletter-email", error)}
+          className="min-w-0 flex-1 rounded-full border border-white/25 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/45 hover:border-white/45"
+        />
+        <button
+          type="submit"
+          className="shrink-0 rounded-full border border-white/40 px-4 py-2.5 text-sm font-semibold text-white hover:border-white hover:bg-white/10"
+        >
+          Subscribe
+        </button>
+      </div>
+      <FieldError inputId="newsletter-email" error={error} className="mt-2 text-sm font-medium text-pollen" />
+    </form>
   );
 }
